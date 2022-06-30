@@ -13,7 +13,6 @@
 </template>
 
 <script>
-import getDate from "../assets/commonJS/getDate.js"
 
 export default {
     data() {
@@ -24,13 +23,7 @@ export default {
     methods: {
         addTodoItem() {
             if(this.newtodoItem !== "") {
-                var value = {
-                    item: this.newTodoItem,
-                    date: `${getDate().date} ${getDate().week}`,
-                    time: getDate().time,
-                    completed: false
-                }
-                localStorage.setItem(this.newTodoItem, JSON.stringify(value));
+                this.$emit("addItem", this.newTodoItem);
                 this.clearInput();
             }
         },

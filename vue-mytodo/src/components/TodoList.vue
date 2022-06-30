@@ -1,6 +1,6 @@
 <template>
     <ul class="list">
-        <li class = "list__item" v-for="todoItem in todoItems" v-bind:key="todoItem">
+        <li class = "list__item" v-for="(todoItem, index) in propsdata" v-bind:key="todoItem">
             <input 
                 type="checkbox" 
                 v-bind:id="todoItem.item"
@@ -20,28 +20,13 @@
 
 <script>
 export default {
-    data() {
-        return {
-            todoItems: []
-        }
-    },
+    props: ['propsdata'],
     methods: {
         toggleComplete(todoItem) {
-            todoItem.completed = !todoItem.completed;
-            localStorage.setItem(todoItem.item, JSON.stringify(todoItem));
+            this.$emit("toggleItem", todoItem)
         },
         removeTodo(todoItem, index){
-            localStorage.removeItem(todoItem.item);
-            this.todoItems.splice(index, 1);
-        }
-    },
-    created() {
-        if(localStorage.length > 0){
-            for(let i = 0; i < localStorage.length; i++){
-                if(localStorage.key(i) !== "loglevel:webpack-dev-server"){
-                    this.todoItems.push(JSON.parse(localStorage.getItem(localStorage.key(i))));
-                }
-            }
+            this.$emit("removeItem", todoItem, index)
         }
     }
 }
