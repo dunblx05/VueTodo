@@ -1,7 +1,11 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <TodoHeader></TodoHeader>
+    <TodoTitle></TodoTitle>
+    <TodoInput></TodoInput>
+    <TodoController></TodoController>
+    <TodoList></TodoList>
+    <TodoFooter></TodoFooter>
   </div>
 </template>
 
@@ -11,6 +15,7 @@ import TodoTitle from "./components/TodoTitle";
 import TodoController from "./components/TodoController";
 import TodoList from "./components/TodoList";
 import TodoFooter from "./components/TodoFooter";
+import TodoInput from "./components/TodoInput.vue";
 
 export default {
   name: 'App',
@@ -19,8 +24,9 @@ export default {
     TodoTitle,
     TodoController,
     TodoList,
-    TodoFooter
-  }
+    TodoFooter,
+    TodoInput
+}
 }
 </script>
 
