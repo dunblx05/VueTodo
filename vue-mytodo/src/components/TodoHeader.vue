@@ -6,6 +6,8 @@
 </template>
 
 <script>
+import getDate from "../assets/commonJS/getDate.js"
+
 export default {
     data() {
         return {
@@ -13,12 +15,7 @@ export default {
         }
     },
     created() {
-        const now = new Date();
-        const month = now.getMonth() + 1;
-        const day = now.getDate();
-        const weekList = new Array("Sun.", "Mon.", "Tue.", "Wed.", "Thu.", "Fri.", "Sat.");
-        const week = weekList[now.getDay()];
-        this. timestamp = `${month}/${day} ${week}`;
+        this.timestamp = `${getDate().month}/${getDate().date} ${getDate().week}`;
     }
 }
 </script>
