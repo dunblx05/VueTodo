@@ -1,32 +1,61 @@
 <template>
   <div id="app">
+    <Modal v-show="showModal" v-on:close="showModal = false">
+      <template v-slot:modal-text>{{ modalText }}</template>
+    </Modal>
     <TodoHeader></TodoHeader>
-    <TodoTitle v-bind:propsdata="checkCount"></TodoTitle>
-    <TodoInput v-on:addItem="addOneItem"></TodoInput>
-    <TodoController v-on:clearAll="clearAllItem" v-on:sortItem="sortAllItem"></TodoController>
-    <TodoList v-bind:propsdata="todoItems" v-on:removeItem="removeOneItem" v-on:toggleItem="toggleOneItem"></TodoList>
-    <TodoFooter></TodoFooter>
+    <div v-if="userName">
+      <TodoTitle v-bind:propCount="checkCount" v-bind:propName="userName" v-on:changeName="addUserName"></TodoTitle>
+      <TodoInput v-on:addItem="addOneItem"></TodoInput>
+      <TodoController v-on:clearAll="clearAllItem" v-on:sortItem="sortAllItem"></TodoController>
+      <TodoList v-bind:propEmpty="isEmpty" v-bind:propItems="todoItems" v-on:removeItem="removeOneItem" v-on:toggleItem="toggleOneItem"></TodoList>
+      <TodoFooter></TodoFooter>
+    </div>
+    <div v-else>
+      <TodoHello v-on:addName="addUserName"></TodoHello>
+    </div>
   </div>
 </template>
 
 <script>
+import Modal from "./components/common/AlertModal"
 import TodoHeader from "./components/TodoHeader";
 import TodoTitle from "./components/TodoTitle";
 import TodoController from "./components/TodoController";
 import TodoList from "./components/TodoList";
 import TodoFooter from "./components/TodoFooter";
-import TodoInput from "./components/TodoInput.vue";
+import TodoInput from "./components/TodoInput";
+import TodoHello from "./components/TodoHello"
 import getDate from "./assets/commonJS/getDate.js";
 
 export default {
   name: 'App',
   data() {
     return {
-      todoItems: []
+      userName: '',
+      todoItems: [],
+      modalText: "",
+      showModal: false
     }
   },
   methods: {
+    addUserName(userName) {
+      localStorage.setItem("userName", userName);
+      this.userName = userName;
+    },
     addOneItem(todoItem) {
+      if (todoItem === "") {
+        this.showModal = !this.showModal;
+        this.modalText = "The form is empty. Please enter your task.";
+        return false;
+      }
+      for (let i = 0; i < this.todoItems.length; i++) {
+        if (this.todoItems[i].item === todoItem) {
+          this.showModal = !this.showModal;
+          this.modalText = "I think you've already had the task.";
+          return false;
+        }
+      }
       var value = {
         item: todoItem,
         date: `${getDate().date} ${getDate().week}`,
@@ -82,12 +111,17 @@ export default {
         left: checkLeftItems()
       }
       return count;
+    },
+    isEmpty() {
+      return this.todoItems.length <= 0 ? true : false
     }
   },
   created() {
+    this.userName = localStorage.getItem("userName")
+
     if(localStorage.length > 0) {
       for(let i = 0; i < localStorage.length; i++){
-        if(localStorage.key(i) !== "loglevel:webpack-dev-server"){
+        if(localStorage.key(i) !== "loglevel:webpack-dev-server" && localStorage.key(i) !== "userName"){
           this.todoItems.push(JSON.parse(localStorage.getItem(localStorage.key(i))));
         }
       }
@@ -102,7 +136,9 @@ export default {
     TodoController,
     TodoList,
     TodoFooter,
-    TodoInput
+    TodoInput,
+    TodoHello,
+    Modal
   }
 }
 </script>

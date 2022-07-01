@@ -2,6 +2,19 @@ export default () => {
     const now = new Date();
     const month = now.getMonth() + 1;
     const date = now.getDate();
+    const hour = now.getHours();
+    let daytime = ""
+
+    if (hour < 12) {
+        daytime = 'morning'
+    }
+    else if (hour < 18) {
+        daytime = 'afternoon'
+    }
+    else {
+        daytime = 'evening'
+    }
+
     const weekList = new Array("Sun.", "Mon.", "Tue.", "Wed.", "Thu.", "Fri.", "Sat.");
     const week = weekList[now.getDay()];
     const time = now.getTime();
@@ -10,7 +23,8 @@ export default () => {
         month,
         date,
         week,
-        time
+        time,
+        daytime
     }
     return dateInfo
 }
